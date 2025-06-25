@@ -3,17 +3,20 @@ Pytest configuration for the seek_core package tests.
 
 This file contains fixtures and configuration for pytest tests.
 """
-import pytest
+
 from unittest.mock import MagicMock
-from seek_core.models.schemas import LearnerProfile
+
+import pytest
+
 from seek_core.llm.openai_service import LLMService
+from seek_core.models.schemas import LearnerProfile
 
 
 @pytest.fixture
 def mock_llm_service():
     """
     Fixture providing a mock LLM service for testing.
-    
+
     Returns:
         MagicMock: A mock LLM service
     """
@@ -27,7 +30,7 @@ def mock_llm_service():
 def sample_learner():
     """
     Fixture providing a sample learner profile for testing.
-    
+
     Returns:
         LearnerProfile: A sample learner profile
     """
@@ -37,5 +40,5 @@ def sample_learner():
         learning_style="visual",
         known_topics=["fractions"],
         struggles=["decimals", "percentages"],
-        goal="master converting between decimals and fractions"
+        goal="master converting between decimals and fractions",
     )

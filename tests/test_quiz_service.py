@@ -4,12 +4,14 @@ Tests for the quiz service.
 This module contains tests that verify the functionality of the
 quiz service component of the seek-core package.
 """
-import json
+
+from unittest.mock import MagicMock
+
 import pytest
-from unittest.mock import MagicMock, patch
-from seek_core.models.schemas import LearnerProfile, QuizQuestion
-from seek_core.services.quiz_service import QuizService
+
 from seek_core.llm.openai_service import LLMService
+from seek_core.models.schemas import QuizQuestion
+from seek_core.services.quiz_service import QuizService
 
 
 # Sample JSON response from LLM
@@ -41,53 +43,55 @@ def sample_quiz_response():
 
 class TestQuizService:
     """Tests for the QuizService class."""
-    
+
     def test_generate_quiz_success(self, sample_learner, sample_quiz_response):
         """Test successful quiz generation."""
         # Create a mock LLM service
         mock_llm_service = MagicMock(spec=LLMService)
         mock_llm_service.generate_json_content.return_value = sample_quiz_response
-        
+
         # Create the quiz service with the mock LLM service
         quiz_service = QuizService(mock_llm_service)
-        
+
         # Generate a quiz
         quiz = quiz_service.generate_quiz(sample_learner)
-        
+
         # Check that the LLM service was called
         mock_llm_service.generate_json_content.assert_called_once()
-        
+
         # Check that we got the expected number of questions
         assert len(quiz) == 3
-        
+
         # Check that each item is a QuizQuestion
         for question in quiz:
             assert isinstance(question, QuizQuestion)
-        
+
         # Check the content of the first question
-        assert "Which of the following is equal to 1/4 as a decimal?" in quiz[0].question
+        assert (
+            "Which of the following is equal to 1/4 as a decimal?" in quiz[0].question
+        )
         assert len(quiz[0].options) == 4
         assert quiz[0].correct_answer_index == 0
         assert "divide" in quiz[0].explanation.lower()
-    
+
     def test_generate_quiz_error_handling(self, sample_learner):
         """Test error handling during quiz generation."""
         # Create a mock LLM service that raises an exception
         mock_llm_service = MagicMock(spec=LLMService)
         mock_llm_service.generate_json_content.side_effect = Exception("API error")
-        
+
         # Create the quiz service with the mock LLM service
         quiz_service = QuizService(mock_llm_service)
-        
+
         # Generate a quiz
         quiz = quiz_service.generate_quiz(sample_learner)
-        
+
         # Check that we got a fallback quiz
         assert len(quiz) == 3
-        
+
         # Check that each item is a QuizQuestion
         for question in quiz:
             assert isinstance(question, QuizQuestion)
-        
+
         # Check that the content indicates it's a fallback
         assert "placeholder" in quiz[0].explanation.lower()

@@ -4,14 +4,14 @@ Configuration module for the seek_core package.
 This module provides configuration settings for the seek_core package,
 including loading environment variables and providing default settings.
 """
-import os
+
 import logging
-from typing import Optional, Dict, Any
+import os
+from typing import Any, Dict
 
 # Set up logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("seek_core")
 
@@ -19,10 +19,10 @@ logger = logging.getLogger("seek_core")
 def get_openai_api_key() -> str:
     """
     Get the OpenAI API key from environment variables.
-    
+
     Returns:
         str: The OpenAI API key
-    
+
     Raises:
         ValueError: If the API key is not found
     """
@@ -37,7 +37,7 @@ def get_openai_api_key() -> str:
 def get_default_config() -> Dict[str, Any]:
     """
     Get the default configuration for the seek_core package.
-    
+
     Returns:
         Dict[str, Any]: The default configuration
     """
@@ -49,7 +49,7 @@ def get_default_config() -> Dict[str, Any]:
         "max_lessons": int(os.environ.get("MAX_LESSONS", "5")),
         "min_quiz_questions": int(os.environ.get("MIN_QUIZ_QUESTIONS", "3")),
         "max_quiz_questions": int(os.environ.get("MAX_QUIZ_QUESTIONS", "5")),
-        "log_level": os.environ.get("LOG_LEVEL", "INFO")
+        "log_level": os.environ.get("LOG_LEVEL", "INFO"),
     }
 
 

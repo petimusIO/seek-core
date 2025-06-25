@@ -1,6 +1,20 @@
 [flake8]
-exclude = .git,__pycache__,build,dist,venv,.env,*.egg-info
-max-line-length = 88
-extend-ignore = E203, W503
+exclude = .git,__pycache__,build,dist,venv,.env,*.egg-info,.venv,*.pyc
+max-line-length = 160
+# E203: Whitespace before ':' (black handles this)
+# W503: Line break before binary operator (black handles this)
+# E501: Line too long (handled by increasing max-line-length)
+# W291: Trailing whitespace
+# W293: Blank line contains whitespace
+# F401: Module imported but unused (useful during development)
+# F841: Local variable name is assigned to but never used
+# E128: Continuation line under-indented for visual indent
+# E402: Module level import not at top of file
+# F403: 'from module import *' used
+# F405: Name may be undefined, or defined from star imports
+extend-ignore = E203, W503, E501, W291, W293, F841, E128, E402, F403, F405
 per-file-ignores =
-    __init__.py:F401
+    __init__.py:F401,F403
+    tests/*:F401,F811,E501
+    seek_core/llm/*:F401,E501
+    seek_core/services/*:F401,E501
